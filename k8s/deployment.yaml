@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-app
+  namespace: ecommerce
+  labels:
+    app:     ecommerce
+    version: "1.0"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ecommerce
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge:       1
+      maxUnavailable: 0     # Zero-downtime deploys
+  template:
+    metadata:
+      labels:
+        app:     ecommerce
+        version: "1.0"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port:   "5000"
+        prometheus.io/path:   "/metrics"
+    spec:
+      containers:
+        - name: ecommerce-app
+          image: ghcr.io/YOUR_USERNAME/ecommerce-app:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+              name: http
+
+          env:
+            - name: ENVIRONMENT
+              value: "production"
+
+          resources:
+            requests:
+              cpu:    "100m"
+              memory: "128Mi"
+            limits:
+              cpu:    "500m"
+              memory: "256Mi"
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds:       20
+            failureThreshold:    3
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds:       10
+            failureThreshold:    3
+
+      terminationGracePeriodSeconds: 30
