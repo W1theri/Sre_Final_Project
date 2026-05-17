@@ -1,0 +1,116 @@
+groups:
+  # ── SLO: Availability ─────────────────────────────────────────────────────
+  - name: slo_availability
+    interval: 30s
+    rules:
+
+      # Error rate > 1% over 5 minutes (SLO breach warning)
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total[5m]))
+          ) > 0.01
+        for: 2m
+        labels:
+          severity: warning
+          team:     sre
+        annotations:
+          summary:     "High error rate detected"
+          description: "Error rate is {{ humanizePercentage $value }} (SLO: < 1%)"
+          runbook:     "https://wiki.internal/runbooks/high-error-rate"
+
+      # Error rate > 5% (SLO breach critical)
+      - alert: CriticalErrorRate
+        expr: |
+          (
+            sum(rate(http_requests_total{status=~"5.."}[5m]))
+            /
+            sum(rate(http_requests_total[5m]))
+          ) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+          team:     sre
+        annotations:
+          summary:     "Critical error rate – SLO breach imminent"
+          description: "Error rate is {{ humanizePercentage $value }}"
+
+  # ── SLO: Latency ──────────────────────────────────────────────────────────
+  - name: slo_latency
+    rules:
+
+      # p99 latency > 500ms
+      - alert: HighLatencyP99
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le, endpoint)
+          ) > 0.5
+        for: 3m
+        labels:
+          severity: warning
+          team:     sre
+        annotations:
+          summary:     "P99 latency above 500ms SLO"
+          description: "P99 latency for {{ $labels.endpoint }} is {{ $value | humanizeDuration }}"
+
+      # p99 latency > 1s (critical)
+      - alert: CriticalLatencyP99
+        expr: |
+          histogram_quantile(0.99,
+            sum(rate(http_request_duration_seconds_bucket[5m])) by (le)
+          ) > 1.0
+        for: 2m
+        labels:
+          severity: critical
+          team:     sre
+        annotations:
+          summary:     "P99 latency above 1s – critical SLO breach"
+          description: "Global P99 latency is {{ $value | humanizeDuration }}"
+
+  # ── Service Health ────────────────────────────────────────────────────────
+  - name: service_health
+    rules:
+
+      # Service is down
+      - alert: ServiceDown
+        expr: up{job="ecommerce-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          team:     sre
+        annotations:
+          summary:     "E-Commerce service is down"
+          description: "Instance {{ $labels.instance }} has been down for more than 1 minute"
+
+      # No traffic (dead service)
+      - alert: NoTraffic
+        expr: sum(rate(http_requests_total[5m])) == 0
+        for: 5m
+        labels:
+          severity: warning
+          team:     sre
+        annotations:
+          summary:     "No traffic to e-commerce service"
+          description: "No requests received in the last 5 minutes"
+
+  # ── Business Metrics ──────────────────────────────────────────────────────
+  - name: business_metrics
+    rules:
+
+      # High order failure rate
+      - alert: HighOrderFailureRate
+        expr: |
+          (
+            rate(orders_total{status="failed"}[10m])
+            /
+            rate(orders_total[10m])
+          ) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          team:     sre
+        annotations:
+          summary:     "High order failure rate"
+          description: "{{ humanizePercentage $value }} of orders are failing"

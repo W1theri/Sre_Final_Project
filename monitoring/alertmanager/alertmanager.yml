@@ -1,0 +1,55 @@
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@ecommerce-sre.local'
+  smtp_require_tls: true
+
+# Routing tree
+route:
+  group_by: ['alertname', 'severity']
+  group_wait:      30s
+  group_interval:  5m
+  repeat_interval: 12h
+  receiver: 'default'
+
+  routes:
+    # Critical alerts → immediate
+    - match:
+        severity: critical
+      receiver: 'critical-alerts'
+      group_wait:     10s
+      repeat_interval: 1h
+
+    # SRE team alerts
+    - match:
+        team: sre
+      receiver: 'sre-team'
+
+receivers:
+  - name: 'default'
+    webhook_configs:
+      - url: 'http://localhost:5001/alerts'
+        send_resolved: true
+
+  - name: 'critical-alerts'
+    webhook_configs:
+      - url: 'http://localhost:5001/critical'
+        send_resolved: true
+    # Uncomment and configure for real email/Slack:
+    # slack_configs:
+    #   - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
+    #     channel: '#sre-alerts'
+    #     title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+    #     text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+  - name: 'sre-team'
+    webhook_configs:
+      - url: 'http://localhost:5001/sre'
+
+inhibit_rules:
+  # Suppress warning if critical is already firing for same alert
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname']
