@@ -29,7 +29,7 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/ecommerce-sre-capstone.git
+git clone https://github.com/W1theri/ecommerce-sre-capstone.git
 cd ecommerce-sre-capstone
 
 # 2. Start everything

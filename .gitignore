@@ -1,0 +1,11 @@
+.venv/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+.coverage
+coverage.xml
+htmlcov/
+load-test-report.html
+terraform/.terraform/
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
