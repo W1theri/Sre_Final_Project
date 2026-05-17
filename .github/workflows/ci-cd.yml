@@ -31,13 +31,13 @@ jobs:
       - name: Run unit tests
         run: |
           cd app
-          python -m pytest tests/ -v --cov=app --cov-report=xml || echo "No tests yet"
+          python -m pytest tests/ -v --cov=app --cov-report=xml
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         if: always()
         with:
-          file: ./coverage.xml
+          file: ./app/coverage.xml
 
   # ── Job 2: Build & Push ─────────────────────────────────────────────────────
   build:
@@ -71,7 +71,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,prefix=sha-
+            type=sha,prefix=sha-,format=long
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
 
