@@ -1,8 +1,8 @@
-# 🛒 E-Commerce SRE Capstone Project
+# E-Commerce SRE Capstone Project
 
 > Production Readiness Review (PRR) — SRE Course Final Project
 
-## 🏗 Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -25,7 +25,7 @@
     └──────────────────────────────────────┘
 ```
 
-## ⚡ Quick Start (Docker Compose — Recommended)
+## Quick Start (Docker Compose — Recommended)
 
 ```bash
 # 1. Clone the repository
@@ -42,12 +42,12 @@ docker compose ps
 **Access points:**
 | Service       | URL                          | Credentials    |
 |---------------|------------------------------|----------------|
-| 🛒 API + tester | http://localhost:5000     | —              |
-| 📊 Grafana     | http://localhost:3000         | admin / admin123 |
-| 🔥 Prometheus  | http://localhost:9090         | —              |
-| 🔔 Alertmanager | http://localhost:9093        | —              |
+| API + tester | http://localhost:5000     | —              |
+| Grafana     | http://localhost:3000         | admin / admin123 |
+| Prometheus  | http://localhost:9090         | —              |
+| Alertmanager | http://localhost:9093        | —              |
 
-## 🌍 Terraform Deployment
+## Terraform Deployment
 
 ```bash
 cd terraform
@@ -65,7 +65,7 @@ terraform apply -auto-approve
 terraform output
 ```
 
-## ☸️ Kubernetes (Minikube)
+## Kubernetes (Minikube)
 
 ```bash
 # Start Minikube
@@ -84,7 +84,7 @@ kubectl apply -f k8s/hpa.yaml
 kubectl get hpa -n ecommerce --watch
 ```
 
-## 🧪 API Testing
+## API Testing
 
 ```bash
 BASE=http://localhost:5000
@@ -109,7 +109,7 @@ curl -X POST $BASE/api/orders \
   -d '{"session_id": "YOUR_SESSION_ID"}'
 ```
 
-## 📈 Load Testing (Locust)
+## Load Testing (Locust)
 
 ```bash
 pip install locust
@@ -124,7 +124,7 @@ locust -f tests/locustfile.py \
   --html=load-test-report.html
 ```
 
-## 📊 SLOs
+## SLOs
 
 | SLO | Target | Current |
 |-----|--------|---------|
@@ -133,7 +133,7 @@ locust -f tests/locustfile.py \
 | Error Rate | < 1% | See Grafana |
 | Order Success | > 95% | See Grafana |
 
-## 🗂 Project Structure
+## Project Structure
 
 ```
 ecommerce-sre/
@@ -169,7 +169,7 @@ ecommerce-sre/
 └── docker-compose.yml      # Local dev stack
 ```
 
-## 👥 Team
+## Team
 
 | Role | Responsibility |
 |------|---------------|
