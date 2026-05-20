@@ -42,7 +42,7 @@ def start_timer():
 @app.after_request
 def record_metrics(response):
     latency = time.time() - getattr(request, '_start_time', time.time())
-    endpoint = request.path
+    endpoint = request.url_rule.rule if request.url_rule else request.path
     REQUEST_COUNT.labels(request.method, endpoint, response.status_code).inc()
     REQUEST_LATENCY.labels(endpoint).observe(latency)
     return response

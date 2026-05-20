@@ -4,6 +4,12 @@ variable "app_image" {
   default     = "ecommerce-app:latest"
 }
 
+variable "docker_host" {
+  description = "Docker daemon endpoint. Use npipe:////./pipe/dockerDesktopLinuxEngine on Windows Docker Desktop, unix:///var/run/docker.sock on Linux, or set TF_VAR_docker_host."
+  type        = string
+  default     = "npipe:////./pipe/dockerDesktopLinuxEngine"
+}
+
 variable "app_replicas" {
   description = "Number of app container replicas"
   type        = number

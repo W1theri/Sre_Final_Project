@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: ecommerce-app
-          image: ghcr.io/W1theri/ecommerce-app:latest
+          image: ghcr.io/w1theri/ecommerce-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5000

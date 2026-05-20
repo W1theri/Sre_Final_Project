@@ -58,8 +58,9 @@ class EcommerceUser(HttpUser):
         payload = {
             "product_id": random.choice(PRODUCT_IDS),
             "quantity":   random.randint(1, 3),
-            "session_id": self.session_id or "new-session"
         }
+        if self.session_id:
+            payload["session_id"] = self.session_id
         with self.client.post(
             "/api/cart",
             json=payload,
