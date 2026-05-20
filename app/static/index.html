@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>E-Commerce API Tester</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="panel hero">
+      <div>
+        <p class="eyebrow">SRE Capstone</p>
+        <h1>E-Commerce API Tester</h1>
+        <p class="muted">Exercise the Flask API, keep the current session id, and inspect JSON responses without reaching for curl.</p>
+      </div>
+      <div class="status-row">
+        <span id="health-dot" class="dot"></span>
+        <span id="health-text">Checking API...</span>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Products</h2>
+          <button id="load-products" type="button">Refresh</button>
+        </div>
+        <div id="products" class="products"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Cart</h2>
+        <form id="cart-form" class="form">
+          <label>
+            Product
+            <select id="product-id" name="product_id" required></select>
+          </label>
+          <label>
+            Quantity
+            <input id="quantity" name="quantity" type="number" min="1" value="1" required>
+          </label>
+          <button type="submit">Add to Cart</button>
+        </form>
+
+        <div class="session-box">
+          <label for="session-id">Session ID</label>
+          <div class="session-input">
+            <input id="session-id" type="text" placeholder="Created after adding to cart">
+            <button id="load-cart" type="button">Load</button>
+          </div>
+        </div>
+
+        <div id="cart-summary" class="summary muted">Cart is empty.</div>
+        <button id="place-order" class="primary" type="button">Place Order</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Response</h2>
+        <button id="clear-log" type="button">Clear</button>
+      </div>
+      <pre id="response-log">{}</pre>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

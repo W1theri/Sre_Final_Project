@@ -42,7 +42,7 @@ docker compose ps
 **Access points:**
 | Service       | URL                          | Credentials    |
 |---------------|------------------------------|----------------|
-| 🛒 API         | http://localhost:5000         | —              |
+| 🛒 API + tester | http://localhost:5000     | —              |
 | 📊 Grafana     | http://localhost:3000         | admin / admin123 |
 | 🔥 Prometheus  | http://localhost:9090         | —              |
 | 🔔 Alertmanager | http://localhost:9093        | —              |
@@ -88,6 +88,9 @@ kubectl get hpa -n ecommerce --watch
 
 ```bash
 BASE=http://localhost:5000
+
+# Browser API tester
+# Open http://localhost:5000
 
 # Health check
 curl $BASE/health

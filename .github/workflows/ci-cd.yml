@@ -13,7 +13,7 @@ env:
 jobs:
   # ── Job 1: Test ─────────────────────────────────────────────────────────────
   test:
-    name: 🧪 Run Tests
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -41,7 +41,7 @@ jobs:
 
   # ── Job 2: Build & Push ─────────────────────────────────────────────────────
   build:
-    name: 🐳 Build & Push Image
+    name: Build & Push Image
     runs-on: ubuntu-latest
     needs: test
     permissions:
@@ -96,7 +96,7 @@ jobs:
 
   # ── Job 3: Deploy ────────────────────────────────────────────────────────────
   deploy:
-    name: 🚀 Deploy to Cluster
+    name: Deploy to Cluster
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -129,14 +129,14 @@ jobs:
       - name: Verify deployment
         run: |
           kubectl get pods -n ecommerce -l app=ecommerce
-          echo "✅ Deployment successful!"
+          echo "Deployment successful!"
 
       - name: Notify on success
         if: success()
-        run: echo "::notice::🎉 Deployed ${{ github.sha }} to production"
+        run: echo "::notice::Deployed ${{ github.sha }} to production"
 
       - name: Rollback on failure
         if: failure()
         run: |
-          echo "⚠️ Deployment failed — rolling back..."
+          echo "Deployment failed — rolling back..."
           kubectl rollout undo deployment/ecommerce-app -n ecommerce

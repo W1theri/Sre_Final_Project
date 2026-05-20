@@ -17,6 +17,13 @@ def test_health_endpoint(client):
     assert response.get_json()["status"] == "healthy"
 
 
+def test_frontend_endpoint(client):
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert b"E-Commerce API Tester" in response.data
+
+
 def test_products_endpoint(client):
     response = client.get("/api/products")
     payload = response.get_json()

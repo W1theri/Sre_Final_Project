@@ -39,7 +39,7 @@ receivers:
     # slack_configs:
     #   - api_url: 'https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK'
     #     channel: '#sre-alerts'
-    #     title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
+    #     title: 'CRITICAL: {{ .GroupLabels.alertname }}'
     #     text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
 
   - name: 'sre-team'

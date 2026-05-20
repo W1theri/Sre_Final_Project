@@ -52,6 +52,10 @@ def record_metrics(response):
 def health():
     return jsonify({"status": "healthy", "service": "ecommerce-api", "version": "1.0.0"})
 
+@app.route('/')
+def frontend():
+    return app.send_static_file('index.html')
+
 @app.route('/metrics')
 def metrics():
     return generate_latest(), 200, {'Content-Type': CONTENT_TYPE_LATEST}
