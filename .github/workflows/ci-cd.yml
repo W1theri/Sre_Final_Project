@@ -122,9 +122,21 @@ jobs:
           version: 'v1.29.0'
 
       - name: Configure kubeconfig
+        id: configure_kubeconfig
         run: |
+          set -euo pipefail
+
+          if [ -z "${{ secrets.KUBECONFIG }}" ]; then
+            echo "::error::KUBECONFIG secret is empty or missing. Add a base64-encoded kubeconfig to repository secrets, or disable the deploy job."
+            exit 1
+          fi
+
           mkdir -p ~/.kube
-          echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+          printf '%s' "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+          chmod 600 ~/.kube/config
+
+          kubectl config current-context
+          kubectl cluster-info
 
       - name: Deploy to Kubernetes
         run: |
@@ -144,7 +156,7 @@ jobs:
         run: echo "::notice::Deployed ${{ github.sha }} to production"
 
       - name: Rollback on failure
-        if: failure()
+        if: failure() && steps.configure_kubeconfig.outcome == 'success'
         run: |
           echo "Deployment failed — rolling back..."
           kubectl rollout undo deployment/ecommerce-app -n ecommerce
